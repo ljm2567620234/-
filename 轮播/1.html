@@ -1,0 +1,117 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+	* {margin:0; padding:0; }
+	li{list-style:none; }
+
+	#div1 {
+			width:850px; 
+			height:500px; 
+			margin:50px auto;
+			 overflow:hidden; 
+			 position:relative;
+	}
+	#div1 ul{
+		width:4250px;
+		position: absolute;
+	}
+	#div1 ul li{
+		height:500px;
+		float: left;
+		}
+	img{
+		width:850px; 
+		height:500px;
+		}
+	#div1 ol {
+			position:absolute;
+			right: 10%;
+			bottom: 10px;
+			z-index:6;
+		}
+	#div1 ol li{width: 20px;height: 20px;background: #fff;margin-left: 5px;float: left;line-height: 20px;text-align: center;cursor: pointer;}
+	#div1 ol li.ac{background: red;color: #fff;}
+	#div1>a{text-decoration: none;position: absolute;top: 50%;margin-top: -10px;height: 40px;line-height: 32px;text-align: center;width: 40px;font-size: 40px;vertical-align: middle;color: #fff;background: rgba(0,0,0,0.5);z-index:6;}
+	#goPrev{left: 0;}
+	#goNext{right: 0;}
+</style>
+</head>
+
+<body>
+<div id="div1">
+	<ul>
+    	<li class="ac"><a href="javascript:alert(0);"><img src="img/1.jpg" /></a></li>
+    	<li><a href="javascript:alert(1);"><img src="img/2.jpg" /></a></li>
+    	<li><a href="javascript:alert(2);"><img src="img/3.jpg" /></a></li>
+    	<li><a href="javascript:alert(3);"><img src="img/4.jpg" /></a></li>
+    	<li><a href="javascript:alert(4);"><img src="img/5.jpg" /></a></li>
+    	
+    </ul>
+    <ol>
+    	<li class="ac">1</li>
+    	<li>2</li>
+    	<li>3</li>
+    	<li>4</li>
+    	<li>5</li>
+    </ol>
+    <a href="javascript:;" id="goPrev">&laquo;</a>
+    <a href="javascript:;" id="goNext">&raquo;</a>
+</div>
+<script src="js/tools.js"></script>
+<script>
+	var div = document.querySelector("#div1"),
+		imgs = div.querySelector("ul").children,
+		btns = div.querySelector("ol").children,
+		goPrev = document.querySelector("#goPrev"),
+		goNext = document.querySelector("#goNext");
+		
+	var index = 0; 
+	var lastIndex = 0; 
+	var timer = null;
+
+	Array.from(btns).forEach(function (btn, i) {
+		btn.onclick = function () {
+			index = i; 
+			changeImg();
+		}
+	})
+	
+	goNext.onclick = function () {
+		if(++index === btns.length) index=0;
+		changeImg();
+//		clearInterval(timer);
+	}
+
+	goPrev.onclick = function () {
+		if(--index < 0) index = btns.length-1;
+		changeImg();
+//		clearInterval(timer);
+	}
+	
+	function autoPlay () {
+		timer = setInterval(function () {
+			goNext.onclick();
+		},2000);
+	}
+	autoPlay();
+	
+	div.onmouseenter = function () {
+		clearInterval(timer);
+	}
+	
+	div.onmouseleave = autoPlay;
+	
+	function changeImg () {
+		console.log(index, lastIndex);
+		btns[lastIndex].classList.remove("ac");
+		btns[index].classList.add("ac");
+		lastIndex = index;
+		tools.move(document.querySelector("ul"),"left",-index*850,500)
+	}	
+</script>
+</body>
+</html>
